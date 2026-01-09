@@ -1,5 +1,7 @@
 package in.boot.main.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,50 +18,42 @@ import in.boot.main.exception.EmployeeAlreadyExistsException;
 import in.boot.main.exception.ErrorResponse;
 import in.boot.main.exception.NoSuchEmpExistsException;
 import in.boot.main.service.EmployeeServiceImpl;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/emp")
 public class MyController {
 
 	private EmployeeServiceImpl service;
-	public MyController(EmployeeServiceImpl service)
-	{
+
+	public MyController(EmployeeServiceImpl service) {
 		this.service = service;
 	}
-	
+
 	@PostMapping("/add")
-	public ResponseEntity<String> addEmp(@RequestBody Employee emp)
-	{
+	public String addEmp(@Valid @RequestBody Employee emp) {
 		String msg = service.addEmployee(emp);
-		if(msg.isBlank())
-		{
-			return new ResponseEntity<>(msg,HttpStatus.BAD_REQUEST);
-		}
-		    return new ResponseEntity<>(msg,HttpStatus.OK);
+		return msg;
 	}
-	
+
 	@GetMapping("/get/{id}")
-	public ResponseEntity<Employee> getEmp(@PathVariable short id)
-	{
+	public Employee getEmp(@PathVariable short id) {
 		Employee employe = service.getEmploye(id);
-		if(employe == null)
-		{
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		    return new ResponseEntity<>(employe,HttpStatus.OK);
+		return employe;
 	}
-	
+
 	@PutMapping("/update/{id}")
-	public ResponseEntity<String> updateEmployee(@PathVariable short id,@RequestBody Employee emp)
-	{
+	public String updateEmployee(@PathVariable short id, @Valid @RequestBody Employee emp) {
 		String msg = service.updateEmployee(id, emp);
-		if(msg == null)
-		{
-		   return new ResponseEntity<>(msg,HttpStatus.BAD_REQUEST);
-		}
-		   return new ResponseEntity<>(msg,HttpStatus.OK);
+		return msg;
 	}
-	
+
+	@GetMapping("/getAll")
+	public List<Employee> getAllEmployee() {
+		List<Employee> list = service.getAllEmployee();
+		return list;
+	}
+
 //	@ExceptionHandler(value=NoSuchEmpExistsException.class)
 //	@ResponseStatus(HttpStatus.NOT_FOUND)
 //     public ErrorResponse handleNoSuchEmpExistException(NoSuchEmpExistsException ex)
@@ -75,6 +69,5 @@ public class MyController {
 //		ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(),ex.getMessage());
 //		return error;
 //    }
-	
-	
+
 }

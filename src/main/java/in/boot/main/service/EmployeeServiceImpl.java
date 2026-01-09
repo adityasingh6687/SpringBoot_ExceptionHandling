@@ -1,5 +1,7 @@
 package in.boot.main.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import in.boot.main.entity.Employee;
 import in.boot.main.exception.EmployeeAlreadyExistsException;
@@ -60,5 +62,19 @@ public class EmployeeServiceImpl implements EmployeeService{
 			repo.save(employee);
 		}
 		return "Employee update successfully!";
+	}
+
+	@Override
+	public List<Employee> getAllEmployee() {
+		// TODO Auto-generated method stub
+		List<Employee> all = repo.findAll();
+		if(all.isEmpty())
+		{
+			throw new NoSuchEmpExistsException("database empty");
+		}
+		else
+		{
+			return all;
+		}
 	}
 }
