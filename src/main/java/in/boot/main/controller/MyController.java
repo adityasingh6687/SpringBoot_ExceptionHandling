@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import in.boot.main.dto.EmpUpdateDTO;
 import in.boot.main.entity.Employee;
 import in.boot.main.exception.EmployeeAlreadyExistsException;
 import in.boot.main.exception.ErrorResponse;
@@ -43,7 +45,7 @@ public class MyController {
 	}
 
 	@PutMapping("/update/{id}")
-	public String updateEmployee(@PathVariable short id, @Valid @RequestBody Employee emp) {
+	public String updateEmployee(@PathVariable short id, @Valid @RequestBody EmpUpdateDTO emp) {
 		String msg = service.updateEmployee(id, emp);
 		return msg;
 	}

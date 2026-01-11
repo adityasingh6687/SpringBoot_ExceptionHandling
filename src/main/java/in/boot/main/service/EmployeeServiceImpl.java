@@ -3,6 +3,8 @@ package in.boot.main.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import in.boot.main.dto.EmpUpdateDTO;
 import in.boot.main.entity.Employee;
 import in.boot.main.exception.EmployeeAlreadyExistsException;
 import in.boot.main.exception.NoSuchEmpExistsException;
@@ -45,22 +47,32 @@ public class EmployeeServiceImpl implements EmployeeService{
 			return ee;
 		}
 	}
-
+	
 	@Override
-	public String updateEmployee(short id, Employee emp) {
+	public String updateEmployee(short id, EmpUpdateDTO emp) {
 		// TODO Auto-generated method stub
 		Employee employee = repo.findById(id).orElse(null);
 		if(employee == null)
 		{
 			throw new NoSuchEmpExistsException("Record not found in database!");
 		}
-		else
+		if(emp.getName() == null && emp.getEmail() == null && emp.getSalary() == null)
+		{
+		     throw new RuntimeException("any one data is required for updation.");	
+		}
+		if(emp.getName() != null)
 		{
 			employee.setName(emp.getName());
-			employee.setEmail(emp.getEmail());
-			employee.setSalary(emp.getSalary());
-			repo.save(employee);
 		}
+		if(emp.getEmail() != null)
+		{
+			employee.setEmail(emp.getEmail());
+		}
+		if(emp.getSalary() != null)
+		{
+			employee.setSalary(emp.getSalary());
+		}
+		repo.save(employee);
 		return "Employee update successfully!";
 	}
 
